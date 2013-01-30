@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.csstudio.frib.opiTemplate.actions.OpenOPITemplateHandler"
+            id="org.csstudio.frib.opiTemplate.openDeviceOPI"
+            name="Device OPI">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+   </extension>
+   <extension
+         point="org.eclipse.help.toc">
+   </extension>
+   <extension
+         point="org.eclipse.ui.elementFactories">
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+   </extension>
+   <extension
+         point="org.eclipse.help.index">
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.csstudio.ui.menu.popup.processvariable">
+         <command
+               commandId="org.csstudio.frib.opiTemplate.openDeviceOPI"
+               icon="icons/rocs.png"
+               label="Device OPI"
+               style="push"
+               tooltip="Send PV name to Device OPI">
+         </command>
+      </menuContribution>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.csstudio.opibuilder.editparts.IPVWidgetEditpart"
+            class="org.csstudio.opibuilder.editparts.PVWidgetAdapterFactory">
+         <adapter
+               type="org.csstudio.csdata.ProcessVariable">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.csstudio.openfile.openDisplay">
+   </extension>
+</plugin>
