@@ -7,15 +7,16 @@ package org.epics.pvmanager.jms.beast;
 import java.text.ParseException;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
+
+import org.epics.vtype.AlarmSeverity;
 import org.epics.vtype.VString;
 import org.epics.vtype.VTypeToString;
 
 /**
- *
+ * 
  * @author carcassi
  */
 class MapMessageToVString extends AlarmTimeDisplayExtractor implements VString {
-
 
 	protected final String value;
 
@@ -23,12 +24,15 @@ class MapMessageToVString extends AlarmTimeDisplayExtractor implements VString {
 	 * @param pvField
 	 * @param disconnected
 	 */
-	public MapMessageToVString(MapMessage message, boolean disconnected) throws JMSException, ParseException {
+	public MapMessageToVString(MapMessage message, boolean disconnected)
+			throws JMSException, ParseException {
 		super(message, disconnected);
-                
 
-		value = message.getString(JMSAlarmMessage.VALUE);
-	
+		if (alarmSeverity.equals(AlarmSeverity.NONE) || message.getString(JMSAlarmMessage.VALUE)==null) {
+			value = "";
+		} else {
+			value = message.getString(JMSAlarmMessage.VALUE);
+		}
 	}
 
 	@Override
@@ -36,7 +40,9 @@ class MapMessageToVString extends AlarmTimeDisplayExtractor implements VString {
 		return value;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

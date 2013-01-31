@@ -24,152 +24,183 @@ import org.epics.util.time.Timestamp;
 
 public class AlarmTimeDisplayExtractor implements Alarm, Time, Display {
 
-    protected final AlarmSeverity alarmSeverity;
-    protected final String alarmStatus;
-    protected final Timestamp timeStamp;
-    protected final Integer timeUserTag;
-    protected final boolean isTimeValid;
-    protected final Double lowerDisplayLimit;
-    protected final Double lowerCtrlLimit;
-    protected final Double lowerAlarmLimit;
-    protected final Double lowerWarningLimit;
-    protected final String units;
-    protected final NumberFormat format;
-    protected final Double upperWarningLimit;
-    protected final Double upperAlarmLimit;
-    protected final Double upperCtrlLimit;
-    protected final Double upperDisplayLimit;
+	protected final AlarmSeverity alarmSeverity;
+	protected final String alarmStatus;
+	protected final Timestamp timeStamp;
+	protected final Integer timeUserTag;
+	protected final boolean isTimeValid;
+	protected final Double lowerDisplayLimit;
+	protected final Double lowerCtrlLimit;
+	protected final Double lowerAlarmLimit;
+	protected final Double lowerWarningLimit;
+	protected final String units;
+	protected final NumberFormat format;
+	protected final Double upperWarningLimit;
+	protected final Double upperAlarmLimit;
+	protected final Double upperCtrlLimit;
+	protected final Double upperDisplayLimit;
 
-    /**
-     *
-     * @param message
-     * @param disconnected
-     */
-    public AlarmTimeDisplayExtractor(MapMessage message, boolean disconnected) throws JMSException, ParseException {
+	/**
+	 * 
+	 * @param message
+	 * @param disconnected
+	 */
+	public AlarmTimeDisplayExtractor(MapMessage message, boolean disconnected)
+			throws JMSException, ParseException {
 
-        // alarm_t
-        if (!message.getString(JMSLogMessage.SEVERITY).isEmpty()) {
-            this.alarmSeverity = alarmSeverityMap.get(message.getString(JMSLogMessage.SEVERITY));
-        } else {
-            this.alarmSeverity = null;
-        }
+		// alarm_t
+		boolean ack = false;
+		if (message.getString(JMSLogMessage.SEVERITY) != null) {
+			if (!message.getString(JMSLogMessage.SEVERITY).isEmpty()
+					&& !message.getString(JMSLogMessage.SEVERITY).endsWith(
+							"ACK")) {
 
-        if (!message.getString(JMSAlarmMessage.STATUS).isEmpty()) {
-            this.alarmStatus = message.getString(JMSAlarmMessage.STATUS);
-        } else {
-            this.alarmStatus = null;
-        }
-        // timeStamp_t 
+				this.alarmSeverity = alarmSeverityMap.get(message
+						.getString(JMSLogMessage.SEVERITY));
+			} else if (message.getString(JMSLogMessage.SEVERITY)
+					.endsWith("ACK")) {
+				ack = true;
+				String noAck = message.getString(JMSLogMessage.SEVERITY)
+						.replaceAll("_ACK", "");
+				this.alarmSeverity = alarmSeverityMap.get(noAck);
+			} else {
 
-        if (message.getString(JMSAlarmMessage.EVENTTIME) != null) {
-            this.timeStamp = Timestamp.of(new SimpleDateFormat(JMSLogMessage.DATE_FORMAT, Locale.ENGLISH).parse(message.getString(JMSAlarmMessage.EVENTTIME)));
-            this.isTimeValid = true;
-        } else {
-            this.timeStamp = null;
-            this.isTimeValid = false;
-        }
-        this.timeUserTag = null;
+				this.alarmSeverity = AlarmSeverity.UNDEFINED;
+			}
+		} else {
+			this.alarmSeverity = AlarmSeverity.UNDEFINED;
+		}
 
-        // display_t    
-        this.lowerDisplayLimit = null;
-        this.upperDisplayLimit = null;
-        // control_t
-        this.lowerCtrlLimit = null;
-        this.upperCtrlLimit = null;
-        // valueAlarm_t
-        this.lowerAlarmLimit = null;
-        this.upperAlarmLimit = null;
-        this.lowerWarningLimit = null;
-        this.upperWarningLimit = null;
-        this.units = null;
-        this.format = null;
-    }
-    protected static final Map<String, AlarmSeverity> alarmSeverityMap;
+		if (message.getString(JMSAlarmMessage.STATUS) != null) {
+			if (!message.getString(JMSAlarmMessage.STATUS).isEmpty()) {
+				if (ack) {
+					this.alarmStatus = "(ACK'ed) "
+							+ message.getString(JMSAlarmMessage.STATUS);
+				} else {
+					this.alarmStatus = message
+							.getString(JMSAlarmMessage.STATUS);
+				}
+			} else {
+				this.alarmStatus = "UNDEFINED";
+			}
+		} else {
+			this.alarmStatus = "";
+		}
+		// timeStamp_t
 
-    static {
-        Map<String, AlarmSeverity> map = new HashMap<String, AlarmSeverity>();
-        map.put("NONE", AlarmSeverity.NONE);
-        map.put("MINOR", AlarmSeverity.MINOR);
-        map.put("MAJOR", AlarmSeverity.MAJOR);
-        map.put("INVALID", AlarmSeverity.INVALID);
-        map.put("UNDEFINED", AlarmSeverity.UNDEFINED);
-        alarmSeverityMap = Collections.unmodifiableMap(map);
-    }
+		if (message.getString(JMSAlarmMessage.EVENTTIME) != null) {
+			this.timeStamp = Timestamp.of(new SimpleDateFormat(
+					JMSLogMessage.DATE_FORMAT, Locale.ENGLISH).parse(message
+					.getString(JMSAlarmMessage.EVENTTIME)));
+			this.isTimeValid = true;
+		} else {
+			this.timeStamp = null;
+			this.isTimeValid = false;
+		}
+		this.timeUserTag = null;
 
-    ;
+		// display_t
+		this.lowerDisplayLimit = null;
+		this.upperDisplayLimit = null;
+		// control_t
+		this.lowerCtrlLimit = null;
+		this.upperCtrlLimit = null;
+		// valueAlarm_t
+		this.lowerAlarmLimit = null;
+		this.upperAlarmLimit = null;
+		this.lowerWarningLimit = null;
+		this.upperWarningLimit = null;
+		this.units = "";
+		this.format = null;
+	}
 
-    @Override
-    public AlarmSeverity getAlarmSeverity() {
-        return alarmSeverity;
-    }
+	protected static final Map<String, AlarmSeverity> alarmSeverityMap;
 
-    @Override
-    public String getAlarmName() {
-        return alarmStatus.toString();
-    }
+	static {
+		Map<String, AlarmSeverity> map = new HashMap<String, AlarmSeverity>();
+		map.put("NONE", AlarmSeverity.NONE);
+		map.put("MINOR", AlarmSeverity.MINOR);
+		map.put("MAJOR", AlarmSeverity.MAJOR);
+		map.put("INVALID", AlarmSeverity.INVALID);
+		map.put("UNDEFINED", AlarmSeverity.UNDEFINED);
+		map.put("OK", AlarmSeverity.NONE);
+		alarmSeverityMap = Collections.unmodifiableMap(map);
+	}
 
-    @Override
-    public Timestamp getTimestamp() {
-        return timeStamp;
-    }
+	;
 
-    @Override
-    public Integer getTimeUserTag() {
-        return timeUserTag;
-    }
+	@Override
+	public AlarmSeverity getAlarmSeverity() {
+		return alarmSeverity;
+	}
 
-    @Override
-    public boolean isTimeValid() {
-        return isTimeValid;
-    }
+	@Override
+	public String getAlarmName() {
+		return alarmStatus.toString();
+	}
 
-    @Override
-    public Double getLowerDisplayLimit() {
-        return lowerDisplayLimit;
-    }
+	@Override
+	public Timestamp getTimestamp() {
+		return timeStamp;
+	}
 
-    @Override
-    public Double getLowerCtrlLimit() {
-        return lowerCtrlLimit;
-    }
+	@Override
+	public Integer getTimeUserTag() {
+		return timeUserTag;
+	}
 
-    @Override
-    public Double getLowerAlarmLimit() {
-        return lowerAlarmLimit;
-    }
+	@Override
+	public boolean isTimeValid() {
+		return isTimeValid;
+	}
 
-    @Override
-    public Double getLowerWarningLimit() {
-        return lowerWarningLimit;
-    }
+	@Override
+	public Double getLowerDisplayLimit() {
+		return lowerDisplayLimit;
+	}
 
-    @Override
-    public String getUnits() {
-        return units;
-    }
+	@Override
+	public Double getLowerCtrlLimit() {
+		return lowerCtrlLimit;
+	}
 
-    @Override
-    public NumberFormat getFormat() {
-        return format;
-    }
+	@Override
+	public Double getLowerAlarmLimit() {
+		return lowerAlarmLimit;
+	}
 
-    @Override
-    public Double getUpperWarningLimit() {
-        return upperWarningLimit;
-    }
+	@Override
+	public Double getLowerWarningLimit() {
+		return lowerWarningLimit;
+	}
 
-    @Override
-    public Double getUpperAlarmLimit() {
-        return upperAlarmLimit;
-    }
+	@Override
+	public String getUnits() {
+		return units;
+	}
 
-    @Override
-    public Double getUpperCtrlLimit() {
-        return upperCtrlLimit;
-    }
+	@Override
+	public NumberFormat getFormat() {
+		return format;
+	}
 
-    @Override
-    public Double getUpperDisplayLimit() {
-        return upperDisplayLimit;
-    }
+	@Override
+	public Double getUpperWarningLimit() {
+		return upperWarningLimit;
+	}
+
+	@Override
+	public Double getUpperAlarmLimit() {
+		return upperAlarmLimit;
+	}
+
+	@Override
+	public Double getUpperCtrlLimit() {
+		return upperCtrlLimit;
+	}
+
+	@Override
+	public Double getUpperDisplayLimit() {
+		return upperDisplayLimit;
+	}
 }

@@ -30,6 +30,7 @@ public class BeastDataSource extends DataSource {
     private Connection connection;
     private final BeastTypeSupport typeSupport;
     private String topicName;
+    private String url;
 
     /**
      *
@@ -37,10 +38,22 @@ public class BeastDataSource extends DataSource {
     public BeastDataSource(String topicName, String url) throws JMSException, Exception {
         super(true);
         this.topicName = topicName;
+        this.url = url;
         typeSupport = new BeastTypeSupport(new BeastVTypeAdapterSet());
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER, ActiveMQConnection.DEFAULT_PASSWORD, url);
         connection = factory.createConnection();
         connection.start();
+    }
+    
+    public BeastDataSource(BeastDataSource datasource) throws JMSException, Exception {
+    	super(true);
+    	this.topicName = datasource.topicName;
+    	this.url = datasource.url;
+        typeSupport = new BeastTypeSupport(new BeastVTypeAdapterSet());
+        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER, ActiveMQConnection.DEFAULT_PASSWORD, url);
+        connection = factory.createConnection();
+        connection.start();
+    	
     }
 
     @Override

@@ -9,13 +9,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.epics.pvmanager.jms.beast.BeastDataSource;
+import javax.jms.JMSException;
 
+import org.epics.pvmanager.jms.beast.BeastDataSource;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
-
-
 
 /**
  * Client to be regestered to the extension point.
@@ -24,31 +23,43 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
  * 
  */
 @SuppressWarnings("deprecation")
-public class BeastDataSourceFromPreferences {
+public class BeastDataSourceFromPreferences extends BeastDataSource {
 
 	private static Logger log = Logger
 			.getLogger(BeastDataSourceFromPreferences.class.getName());
-	private volatile BeastDataSource client;
+	private static String topic_name;
+	private static String server;
 
 	/**
 	 * 
 	 */
-	public BeastDataSourceFromPreferences() {
+
+	static {
 		final IPreferencesService prefs = Platform.getPreferencesService();
-		
-		String topic_name = prefs.getString(Activator.PLUGIN_ID,
-				PreferenceConstants.topic_name,
-				"ALARM_900W_SERVER", null);
-		
-		String server = prefs.getString(Activator.PLUGIN_ID,
+
+		topic_name = prefs.getString(Activator.PLUGIN_ID,
+				PreferenceConstants.topic_name, "ALARM_900W", null);
+
+		server = prefs.getString(Activator.PLUGIN_ID,
 				PreferenceConstants.server,
 				"tcp://alarm.hlc.nscl.msu.edu:61616", null);
-		
+	}
+
+	private static BeastDataSource builder() {
+
+		BeastDataSource source = null;
 		try {
-			this.client = new BeastDataSource(topic_name, server);
+			source = new BeastDataSource(topic_name, server);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return source;
+		
+	}
+
+	public BeastDataSourceFromPreferences() throws JMSException, Exception {
+		super(builder());
 	}
 
 }
