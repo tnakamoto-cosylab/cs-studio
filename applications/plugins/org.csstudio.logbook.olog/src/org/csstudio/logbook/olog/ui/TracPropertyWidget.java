@@ -25,7 +25,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 class TracPropertyWidget extends AbstractPropertyWidget {
     private static final Property widgetProperty = PropertyBuilder
-	    .property("Trac").attribute("TicketId").attribute("TicketURL")
+	    .property("Ticket").attribute("id").attribute("url")
 	    .build();
 
     private Text textId;
@@ -86,8 +86,8 @@ class TracPropertyWidget extends AbstractPropertyWidget {
 			    .logEntry(getLogEntryChangeset().getLogEntry());
 		    logEntryBuilder.addProperty(PropertyBuilder
 			    .property(widgetProperty)
-			    .attribute("TicketId", textId.getText())
-			    .attribute("TicketURL", textURL.getText()));
+			    .attribute("id", textId.getText())
+			    .attribute("url", textURL.getText()));
 		    getLogEntryChangeset().setLogEntryBuilder(logEntryBuilder);
 		} catch (IOException e1) {
 		    // TODO Auto-generated catch block
@@ -135,13 +135,13 @@ class TracPropertyWidget extends AbstractPropertyWidget {
 	}
 	if (property != null) {
 	    this.textId
-		    .setText(property.getAttributeValue("TicketId") == null ? ""
-			    : property.getAttributeValue("TicketId"));
+		    .setText(property.getAttributeValue("id") == null ? ""
+			    : property.getAttributeValue("id"));
 	    this.textURL
-		    .setText(property.getAttributeValue("TicketURL") == null ? ""
-			    : property.getAttributeValue("TicketURL"));
-	    String ticketURL = property.getAttributeValue("TicketURL") == null ? ""
-		    : property.getAttributeValue("TicketURL");
+		    .setText(property.getAttributeValue("url") == null ? ""
+			    : property.getAttributeValue("url"));
+	    String ticketURL = property.getAttributeValue("url") == null ? ""
+		    : property.getAttributeValue("url");
 	    this.link.setText("<a>" + ticketURL + "</a>");
 	}
 

@@ -63,9 +63,9 @@ public class TracPropertyWidgetTest extends ApplicationWindow {
 						.owner("test")
 						.addProperty(
 								PropertyBuilder
-										.property("Trac")
-										.attribute("TicketId", "12345")
-										.attribute("TicketURL",
+										.property("Ticket")
+										.attribute("id", "12345")
+										.attribute("url",
 												"http://localhost.com")));
 			}
 		});

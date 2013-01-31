@@ -15,7 +15,7 @@
             propertywidgetfactory="org.csstudio.logbook.olog.ui.ContextPropertyWidgetFactory">
       </propertywidgetfactory>
       <propertywidgetfactory
-            propertyName="Trac"
+            propertyName="Ticket"
             propertywidgetfactory="org.csstudio.logbook.olog.ui.TracPropertyWidgetFactory">
       </propertywidgetfactory>
    </extension>
