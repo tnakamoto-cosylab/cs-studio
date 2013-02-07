@@ -248,7 +248,7 @@ public class BeastChannelHandler extends
 		map.setString(JMSLogMessage.APPLICATION_ID, "CSS");
 		map.setString(JMSLogMessage.HOST, "host");
 		map.setString(JMSLogMessage.USER, "user");
-		map.setString(JMSLogMessage.NAME, this.pvName);
+		map.setString(JMSLogMessage.NAME, text.equals("CONFIG")?this.topicName:this.pvName);
 		return map;
 	}
 	
