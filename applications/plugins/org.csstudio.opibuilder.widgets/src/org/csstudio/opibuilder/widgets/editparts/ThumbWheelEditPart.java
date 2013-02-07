@@ -26,7 +26,6 @@ import java.math.MathContext;
 
 import org.csstudio.data.values.INumericMetaData;
 import org.csstudio.data.values.IValue;
-import org.csstudio.data.values.ValueUtil;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
@@ -34,6 +33,7 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.model.ThumbWheelModel;
+import org.csstudio.platform.data.ValueUtil;
 import org.csstudio.swt.widgets.figures.ThumbWheelFigure;
 import org.csstudio.swt.widgets.figures.ThumbWheelFigure.WheelListener;
 import org.csstudio.ui.util.CustomMediaFactory;
@@ -82,7 +82,9 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 		figure.setInternalFocusedBorderColor(model.getInternalFocusedBorderColor());
 		figure.setInternalBorderThickness(model.getInternalBorderWidth());
 		figure.setButtonVisibility(model.isButtonVisible());
-
+		
+		markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+		
 		figure.addWheelListener(new WheelListener() {
 
 			public void decrementDecimalPart(int index) {
