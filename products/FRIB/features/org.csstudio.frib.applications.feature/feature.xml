@@ -54,8 +54,4 @@
          id="org.csstudio.scan.ui.feature"
          version="0.0.0"/>
 
-   <includes
-         id="org.csstudio.opibuilder.pvmanager.util.feature"
-         version="0.0.0"/>
-
 </feature>
