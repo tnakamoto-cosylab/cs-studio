@@ -66,7 +66,7 @@ public class BeastChannelHandler extends
 	 */
 	public BeastChannelHandler(String topicName, String pvName,
 			BeastDataSource beastDataSource) {
-		super(topicName);
+		super(pvName);
 		this.beastDataSource = beastDataSource;
 		this.topicName = topicName;
 		this.pvName = pvName;
@@ -158,8 +158,11 @@ public class BeastChannelHandler extends
 							|| pvName.isEmpty()) {
 						processMessage(mapMessage);
 					}
+					if (mapMessage.getString(JMSLogMessage.NAME).equals("CONFIG")) {
+						createInitBeastMapMessage();
+					}
 				}
-			} catch (JMSException ex) {
+			} catch (Exception ex) {
 				Logger.getLogger(BeastChannelHandler.class.getName()).log(
 						Level.SEVERE, null, ex);
 			}
@@ -188,6 +191,12 @@ public class BeastChannelHandler extends
 		@Override
 		public void transportResumed() {
 			processConnection(BeastChannelHandler.this);
+			try {
+				createInitBeastMapMessage();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	};;
 
