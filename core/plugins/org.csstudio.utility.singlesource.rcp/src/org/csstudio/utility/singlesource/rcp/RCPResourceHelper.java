@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 import org.csstudio.utility.singlesource.ResourceHelper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 
@@ -28,6 +31,49 @@ import org.eclipse.ui.IEditorInput;
 @SuppressWarnings("nls")
 public class RCPResourceHelper extends ResourceHelper
 {
+    /** {@inheritDoc} */
+    @Override
+    public boolean exists(final IPath path)
+    {
+        // Try workspace file
+        final IResource resource =
+            ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+        if (resource != null  &&
+            resource.isAccessible() &&
+            resource instanceof IFile)
+            return true;
+        
+        return super.exists(path);
+    }
+
+    /** {@inheritDoc} */
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Object adapt(final IPath path, final Class adapter)
+    {
+        // For getInputStream() and getOutputStream() to function,
+        // path must adapt to IFile.
+        if (adapter == IFile.class)
+        {
+            final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            return root.getFile(path);
+        }
+        return super.adapt(path, adapter);
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public InputStream getInputStream(final IPath path) throws Exception
+    {
+        // Try workspace file
+        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        final IResource ws_file = root.findMember(path);
+        if (ws_file instanceof IFile)
+            return ((IFile)ws_file).getContents(true);
+        
+        return super.getInputStream(path);
+    }
+
     /** {@inheritDoc} */
     @Override
     public InputStream getInputStream(final IEditorInput input) throws Exception
@@ -84,7 +130,10 @@ public class RCPResourceHelper extends ResourceHelper
             {
                 try
                 {
-                    ws_file.setContents(pipein, IResource.FORCE, new NullProgressMonitor());
+                    if (ws_file.exists())
+                        ws_file.setContents(pipein, IResource.FORCE, new NullProgressMonitor());
+                    else
+                        ws_file.create(pipein, IResource.FORCE, new NullProgressMonitor());
                 }
                 catch (Exception ex)
                 {
