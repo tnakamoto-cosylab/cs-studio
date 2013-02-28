@@ -3,6 +3,7 @@
   <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
   <macros>
     <include_parent_macros>true</include_parent_macros>
+    <ID>${System}_${SubSystem}:${Device}_D${D}</ID>
   </macros>
   <wuid>-638416cb:13a51074a96:-77d8</wuid>
   <boy_version>3.1.2.201210191544</boy_version>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Css-frib" id="org.csstudio.frib.product.product" application="org.csstudio.frib.product.application" version="3.2.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Css-frib" id="org.csstudio.frib.product.product" application="org.csstudio.frib.product.application" version="3.2.1.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.csstudio.frib.product/icons/about.png"/>
@@ -11,8 +11,12 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-</programArgs>
-      <vmArgs>-Xmx128m</vmArgs>
+      <programArgs>-
+org.eclipse.platform
+--launcher.defaultAction
+openFile</programArgs>
+      <vmArgs>-Xmx1024m
+-Dosgi.instance.area.default=@user.home/css-workspace</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
@@ -42,10 +46,10 @@
    <features>
       <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.equinox.p2.user.ui"/>
-      <feature id="org.csstudio.frib.eclipse.feature" version="3.1.0.qualifier"/>
-      <feature id="org.csstudio.frib.core.feature" version="3.1.0.qualifier"/>
-      <feature id="org.csstudio.frib.applications.feature" version="3.1.0.qualifier"/>
-      <feature id="org.csstudio.frib.fribcore.feature" version="3.1.0.qualifier"/>
+      <feature id="org.csstudio.frib.applications.feature" version="3.2.1.qualifier"/>
+      <feature id="org.csstudio.frib.core.feature" version="3.2.1.qualifier"/>
+      <feature id="org.csstudio.frib.eclipse.feature" version="3.2.1.qualifier"/>
+      <feature id="org.csstudio.frib.fribcore.feature" version="3.2.1.qualifier"/>
    </features>
 
 

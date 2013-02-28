@@ -3,7 +3,7 @@
   <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
   <macros>
     <include_parent_macros>true</include_parent_macros>
-    <ID>BSS_BTS13:PSQ2_D1104</ID>
+    <ID>${System}_${SubSystem}:${Device}_D${D}</ID>
   </macros>
   <wuid>-3b8feb8b:13a8ec07672:-7fc6</wuid>
   <boy_version>3.1.2.201210191544</boy_version>

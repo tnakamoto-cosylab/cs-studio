@@ -2,45 +2,31 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.editors">
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="org.csstudio.frib.opiTemplate.actions.OpenOPITemplateHandler"
             id="org.csstudio.frib.opiTemplate.openDeviceOPI"
             name="Device OPI">
       </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-   </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-   </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-   </extension>
-   <extension
-         point="org.eclipse.help.toc">
+      <command
+            defaultHandler="org.csstudio.frib.opiTemplate.views.OpenOPITemplate"
+            id="org.csstudio.frib.opiTemplate.views.OpenOPITemplate"
+            name="OPI Template">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.elementFactories">
    </extension>
    <extension
-         point="org.eclipse.ui.popupMenus">
-   </extension>
-   <extension
-         point="org.eclipse.help.index">
-   </extension>
-   <extension
-         point="org.eclipse.help.contexts">
-   </extension>
-   <extension
          point="org.eclipse.ui.views">
+      <view
+            category="org.csstudio.channel.application.category"
+            class="org.csstudio.frib.opiTemplate.views.OPITemplate"
+            icon="icons/rocs.png"
+            id="org.csstudio.frib.opiTemplate.views.OPITemplate"
+            name="OPI Template"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -53,6 +39,30 @@
                label="Device OPI"
                style="push"
                tooltip="Send PV name to Device OPI">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.csstudio.ui.menu.popup.channelquery">
+         <command
+               commandId="org.csstudio.frib.opiTemplate.views.OpenOPITemplate"
+               icon="icons/rocs.png"
+               label="OPI Template"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:display">
+         <command
+               commandId="org.eclipse.ui.views.showView"
+               icon="icons/rocs.png"
+               label="OPI Template"
+               style="push">
+            <parameter
+                  name="org.eclipse.ui.views.showView.viewId"
+                  value="org.csstudio.frib.opiTemplate.views.OPITemplate">
+            </parameter>
          </command>
       </menuContribution>
    </extension>
